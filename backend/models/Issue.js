@@ -13,7 +13,7 @@ const issueSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Electrical', 'Plumbing', 'Furniture', 'cleaning', 'Other']
+        enum: ['Electrical', 'Plumbing', 'Furniture', 'Cleaning', 'Other']
     },
     location: {
         type: String,
@@ -29,6 +29,10 @@ const issueSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'In Progress', 'Resolved'],
         default: 'Pending'
+    },
+    reportedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, {
     timestamps: true

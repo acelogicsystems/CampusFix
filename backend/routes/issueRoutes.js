@@ -25,7 +25,8 @@ router.post('/', protect,  validateIssue, async (req, res) =>
             description,
             category,
             location,
-            priority
+            priority,
+            reportedBy: req.user._id
         });
 
         const savedIssue = await newIssue.save();
@@ -68,21 +69,29 @@ router.get('/', protect, async (req, res) => {
 // @route GET/api/issues/:id
 // @access Public (for now)
 
-router.get('/:id', protect,  async (req, res) => {
+router.get('/:id', protect, async (req, res) => {
     try {
-        const issue = await Issue.findById(req.params.id);
+        const filters = {
+            _id: req.params.id
+        };
+
+        // students can only access their own issues
+        if (req.user.role !== 'Admin') {
+            filters.reportedBy = req.user._id;
+        }
+
+        const issue = await Issue.findOne(filters);
 
         if (!issue) {
             return res.status(404).json({
                 success: false,
                 message: 'Issue not found'
             });
-        } 
-         res.status(200).json({
+        }
+        res.status(200).json({
             success: true,
             data: issue
-
-         });
+        });
     } catch (error) {
         res.status(400).json({
             success: false,
@@ -146,7 +155,7 @@ router.patch('/:id/status', protect, authorize('Admin'), async (req, res) => {
 // @route PUT /api/issues/:id
 // @access Public (for now)
 
-router.put('/:id', protect, validateIssue, async (req, res) => {
+router.put('/:id', protect, authorize('Admin'), validateIssue, async (req, res) => {
     try {
         const {
             title,
@@ -223,6 +232,12 @@ router.get('/', async (req, res) => {
         const { category, status, priority, search } = req.query;
         const filters = {};
 
+        // Students can only see their own issue
+        if (req.user.role !== 'Admin') {
+            filters.reportedBy = req.user._id;
+        }
+
+        // Optional filters
         if (category) {
             filters.category = category;
         }
@@ -241,6 +256,8 @@ router.get('/', async (req, res) => {
                 { description: { $regex: search, $options: 'i' }}
             ];
         }
+
+        //Pagination
         const currentPage = Math.max(1, parseInt(page, 10) || 1);
         const perPage = Math.min(100, Math.max(1, parseInt(limit, 10) || 10));
         const skip = (currentPage - 1) * perPage;
