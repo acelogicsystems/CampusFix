@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    
+
+    --color-graphite: #202B29;
+    --color-graphite-light: #2D3936;
+    --color-lime: #C5F36B;
+    --color-ivory: #F5F3EC;
+    --color-sage: #DCE5D9;
+    --color-terracotta: #DCE5D9;
+    
+    --font-body: 'DM Sans', sans-serif;
+    --font-heading: 'Manrope', sans-serif;
+}
+
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base document styles */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-ivory);
+    color: var(--color-graphite);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Heading typography */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+}
+
+/* Remove default link styling */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Form elements inherit applicatio typography */
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
