@@ -47,7 +47,7 @@ router.post('/', protect,  validateIssue, async (req, res) =>
 // @route GET/api/issues
 // @access public (for now)
 
-router.get('/', async (req, res) => {
+router.get('/', protect, async (req, res) => {
     try {
         const issues = await Issue.find().sort('-createdAt');
 
@@ -68,7 +68,7 @@ router.get('/', async (req, res) => {
 // @route GET/api/issues/:id
 // @access Public (for now)
 
-router.get('/:id',  async (req, res) => {
+router.get('/:id', protect,  async (req, res) => {
     try {
         const issue = await Issue.findById(req.params.id);
 
