@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Issue = require('../models/Issue');
+const validateIssue = require('../middleware/issueValidation');
+const { protect } = require('../middleware/authMiddleware');
+const { authorize } = require('../middleware/roleMiddleware');
 
 //@desc Submit a new maintenance issue
 // @route POST /api/issues
 // @access Public (for now)
 
-router.post('/', async (req, res) =>
+router.post('/', protect,  validateIssue, async (req, res) =>
 {
     try {
         const {
@@ -65,7 +68,7 @@ router.get('/', async (req, res) => {
 // @route GET/api/issues/:id
 // @access Public (for now)
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',  async (req, res) => {
     try {
         const issue = await Issue.findById(req.params.id);
 
@@ -92,7 +95,7 @@ router.get('/:id', async (req, res) => {
 // @route PATCH /api/issues/:id/status
 // @access Public (for now)
 
-router.patch('/:id/status', async (req, res) => {
+router.patch('/:id/status', protect, authorize('Admin'), async (req, res) => {
     try {
         const { status } = req.body;
 
@@ -143,7 +146,7 @@ router.patch('/:id/status', async (req, res) => {
 // @route PUT /api/issues/:id
 // @access Public (for now)
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', protect, validateIssue, async (req, res) => {
     try {
         const {
             title,
@@ -183,6 +186,122 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({
             success: false,
             message: error.message
+        });
+    }
+});
+
+// DELETE an issue
+router.delete('/:id', protect, authorize('Admin'), async (req, res) => {
+    try {
+        const deletedIssue = await Issue.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!deletedIssue) {
+            return res.status(404).json({
+                success: false,
+                message: 'Issue not found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'Issue deleted successfully',
+            data: deletedIssue
+        });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: 'Invalid issue ID'
+        });
+    }
+});
+
+// GET all isues with search and filters
+
+router.get('/', async (req, res) => {
+    try {
+        const { category, status, priority, search } = req.query;
+        const filters = {};
+
+        if (category) {
+            filters.category = category;
+        }
+
+        if (status) {
+            filters.status = status;
+        }
+
+        if (priority) {
+            filters.priority = priority;
+        }
+
+        if (search) {
+            filters.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' }}
+            ];
+        }
+        const currentPage = Math.max(1, parseInt(page, 10) || 1);
+        const perPage = Math.min(100, Math.max(1, parseInt(limit, 10) || 10));
+        const skip = (currentPage - 1) * perPage;
+        const totalIssues = await Issue.countDocuments(filters);
+        const issues = await Issue.find(filters)
+                                            .sort('-createdAt')
+                                            .skip(skip)
+                                            .limit(perPage);
+                                      res.status(200).json({
+                                        successs: true,
+                                        count: issues.length,
+                                        totlaIssues,
+                                        currentPage,
+                                        totalPages:
+                                Math.ceil(totalIssues / perPage),
+                                            data: issues
+                                      })   ;   
+
+    }  catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+//GET issue statistics
+
+router.get('/stats/overview', protect, authorize('Admin'), async (req, res) => {
+    try {
+        const totalIssues = await Issue.countDocuments();
+        const pendingIssues = await Issue.countDocuments({
+            status: 'Pending'
+        });
+
+        const inProgressIssues = await Issue.countDocuments({
+            status: 'in Progress'
+        });
+
+        const resolvedIssues = await Issue.countDocuments({
+            status: 'Resolved'
+        });
+
+        const highPriorityIssues = await Issue.countDocuments({
+            priority: 'High'
+        });
+
+        res.status(200).json({
+            succes: true,
+            data: {
+                totalIssues,
+                pendingIssues,
+                inProgressIssues,
+                resolvedIssues,
+                highPriorityIssues
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message 
         });
     }
 });
