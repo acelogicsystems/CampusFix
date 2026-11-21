@@ -1,6 +1,7 @@
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Stats from "./components/Stats";
+import RecentIssues from "./components/RecentIssues";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <main className="main-content">
         <Header/>
         <Stats />
+        <RecentIssues />
       </main>
     </div>
   );

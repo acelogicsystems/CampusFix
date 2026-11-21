@@ -328,3 +328,149 @@ select {
         grid-template-columns: 1fr;
     }
 }
+
+/* Recent Issues Section */
+
+.recent-issues {
+    margin-top: 35px;
+    background-color: #FFFFFF;
+    border: 1px solid #E8E9E2;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    color: var(--color-graphite);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+
+}
+
+.section-header p {
+    color: #89958E;
+    font-size: 13px;
+}
+
+.view-all-button {
+    background-color: var(--color-soft-sage);
+    color: var(--color-graphite);
+    border: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Recent Issue Table */
+
+.issues-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.issues-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.issues-table th {
+    color: #89958E;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 14px 12px;
+    border-bottom: 1px solid #E8E9E2;
+    white-space: nowrap;
+}
+
+.issues-table td {
+    color: var(--color-graphite);
+    font-size: 13px;
+    padding: 18px 12px;
+    border-bottom: 1px solid #F0F1EC;
+    white-space: nowrap;
+}
+
+.issues-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.issues-table tbody tr:hover {
+    background-color: #F8F9F5;
+}
+
+/* Priority Badges */
+
+.priority-badge, .status-badge {
+    display: inline-block;
+    padding:  6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.priority-high {
+    background-color: #FCE8E3;
+    color: #B94E32;
+}
+
+/* Status Badges */
+.status-pending {
+    background-color: #FFF1D6;
+    color: #946200;
+}
+
+/* Other Priority Levels */
+
+.priority-medium {
+    background-color: #FFF1D6;
+    color: #946200;
+}
+
+.priority-low {
+    background-color: #E5F1E7;
+    color: #39734A;
+}
+
+/* Other Issue Statuses */
+
+.status-in-progress {
+    background-color: #E7EEFA;
+    color: #4266A1;
+}
+
+.status-resolved {
+    background-color: #E5F1E7;
+    color: #39734A;
+}
+
+/* Recent Issue Responsive layout */
+
+@media (max-width: 768) {
+    .recent-issues {
+        padding: 18px;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .section-header h2 {
+        font-size: 16px;
+    }
+
+    .issues-table th, .issues-table td {
+        padding: 14px 10px;
+    }
+}
