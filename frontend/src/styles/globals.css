@@ -8,12 +8,17 @@
     --color-lime: #C5F36B;
     --color-ivory: #F5F3EC;
     --color-sage: #DCE5D9;
-    --color-terracotta: #DCE5D9;
+    --color-terracotta: #D77A58;
     
-    --font-body: 'DM Sans', sans-serif;
-    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Inter', sans-serif;
 }
 
+/* React application root */
+#root {
+    width: 100%;
+    min-height: 100vh;
+}
 /* Reset default browser styles */
 * {
     margin: 0;
@@ -61,7 +66,7 @@ select {
 }
 
 /* Main application layout */
-app.layout {
+.app-layout {
     display: flex;
     min-height: 100vh;
     width: 100%;
@@ -90,6 +95,8 @@ app.layout {
     color: var(--color-ivory);
     padding: 28px 20px;
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
 }
 
 /* Sidebar brand */
@@ -143,7 +150,8 @@ app.layout {
     color: var(--color-ivory);
 }
 
-.nav-link:active {
+.nav-link.active {
+    background-color: var(--color-lime);
     color: var(--color-graphite);
     font-weight: 700;
 }
@@ -152,4 +160,115 @@ app.layout {
     height: 1px;
     background-color: #3A4642;
     margin: 20px 0;
+}
+
+/* Dashboard header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 35px;
+   
+}
+
+.header-title p {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #89958E;
+    margin-bottom: 8px;
+}
+
+.header-title h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    margin-bottom: 6px;
+}
+
+.header-title span {
+    font-size: 13px;
+    color: #7D8882;
+}
+
+/* Header actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-button, .notification-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #E3E5DD;
+    border-radius: 10px;
+    background-color: transparent;
+    color: var(--color-graphite);
+    cursor: pointer;
+}
+
+.notification-dot {
+    position:absolute;
+    top: 9px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    background-color: var(--color-terracotta);
+    border-radius: 50%;
+}
+
+/* User profile */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 16px;
+    border-left: 1px solid #E3E5DD;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--color-sage);
+    color: var(--color-graphite);
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.user-details strong {
+    font-size: 12px;
+}
+
+.user-details span {
+    font-size: 11px;
+    color: #89958E;
+}
+
+/* Header responsive alignment */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
 }

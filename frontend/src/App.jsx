@@ -1,13 +1,13 @@
 import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
 
 function App() {
   return (
     <div className="app-layout">
       <Sidebar/>
-
+      
       <main className="main-content">
-        <h1>Welcome to CampusFix</h1>
-        <p>Your Campus maintenance dashboard.</p>
+        <Header/>
       </main>
     </div>
   );
