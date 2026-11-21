@@ -272,3 +272,59 @@ select {
         flex-wrap: wrap;
     }
 }
+
+/* Statistics card */
+.stat-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E9E9E2;
+    border-radius: 12px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(32, 43, 41, 0.06);
+}
+
+.stat-title {
+    color: #89958E;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    color: var(--color-graphite);
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.stat-description {
+    color: #89958E;
+    font-size: 12px;
+}
+
+/* Statistics grid */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+}
+
+/* Responsive statistics grid */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
