@@ -65,41 +65,6 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// @desc Get a single maintenance issue
-// @route GET/api/issues/:id
-// @access Public (for now)
-
-router.get('/:id', protect, async (req, res) => {
-    try {
-        const filters = {
-            _id: req.params.id
-        };
-
-        // students can only access their own issues
-        if (req.user.role !== 'Admin') {
-            filters.reportedBy = req.user._id;
-        }
-
-        const issue = await Issue.findOne(filters);
-
-        if (!issue) {
-            return res.status(404).json({
-                success: false,
-                message: 'Issue not found'
-            });
-        }
-        res.status(200).json({
-            success: true,
-            data: issue
-        });
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: 'Invalid issue ID'
-        });
-    }
-});
-
 // @desc Update maintenance issue status
 // @route PATCH /api/issues/:id/status
 // @access Public (for now)
@@ -283,6 +248,47 @@ router.get('/', async (req, res) => {
         });
     }
 });
+// @desc Get statistics for the logged-in student
+// @route GET /api/issues/my-stats
+// @access Private (student)
+
+router.get('/my-stats', protect, async (req, res) => {
+    try {
+        const totalIssues = await Issue.countDocuments({
+            reportedBy: req.user._id
+        });
+
+        const pendingIssues = await Issue.countDocuments({
+            reportedBy: req.user._id, status: 'Pending'
+        });
+
+        const inProgressIssues = await Issue.countDocuments({
+            reportedBy: req.user._id, status: 'In Progress'
+        });
+
+        const resolvedIssues = await Issue.countDocuments({
+            reportedBy: req.user._id, status: 'Resolved'
+        });
+
+        res.status(200).json({
+            success: true,
+            stats: {
+                totalIssues,
+                pendingIssues,
+                inProgressIssues,
+                resolvedIssues
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve student statistics',
+            erro: error.message
+        });
+    }
+});
+
+
 
 //GET issue statistics
 
@@ -306,7 +312,7 @@ router.get('/stats/overview', protect, authorize('Admin'), async (req, res) => {
         });
 
         res.status(200).json({
-            succes: true,
+            success: true,
             data: {
                 totalIssues,
                 pendingIssues,
@@ -322,5 +328,42 @@ router.get('/stats/overview', protect, authorize('Admin'), async (req, res) => {
         });
     }
 });
+
+
+// @desc Get a single maintenance issue
+// @route GET/api/issues/:id
+// @access Public (for now)
+
+router.get('/:id', protect, async (req, res) => {
+    try {
+        const filters = {
+            _id: req.params.id
+        };
+
+        // students can only access their own issues
+        if (req.user.role !== 'Admin') {
+            filters.reportedBy = req.user._id;
+        }
+
+        const issue = await Issue.findOne(filters);
+
+        if (!issue) {
+            return res.status(404).json({
+                success: false,
+                message: 'Issue not found'
+            });
+        }
+        res.status(200).json({
+            success: true,
+            data: issue
+        });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: 'Invalid issue ID'
+        });
+    }
+});
+
 
 module.exports = router;

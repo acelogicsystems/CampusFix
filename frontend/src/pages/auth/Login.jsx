@@ -1,7 +1,8 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
+
 
 
 function Login() {
@@ -9,7 +10,7 @@ function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); 
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const handleSubmit = async (event) => {
@@ -30,7 +31,12 @@ function Login() {
             }
 
             login(response.user, response.token);
-            navigate('/')
+            
+            if (response.user.role === 'Admin') {
+                navigate('/admin');
+            } else {
+                navigate('/')
+            }
 
             setMessage('Login successful! welcome back.');
         } catch (error) {
@@ -46,6 +52,11 @@ function Login() {
     return (
         <div className='auth-page'>
             <div className='auth-card'>
+                <div className='auth-brand-icon'>C</div>
+                <div>
+                    <h2>CampusFix</h2>
+                    <span>Campus Maintenance Platform</span>
+                </div>
                 <div className='auth-header'>
                     <h1>Welcome back</h1>
                     <p>Sign in to your CampusFix account.</p>
@@ -83,6 +94,12 @@ function Login() {
                      </button>
                   </div>    
             </form>
+            <div className='auth-footer'>
+                <p>
+                    Don't have an account?
+                    <Link to='/register'>Create one</Link>
+                </p>
+            </div>
         </div>
       
        </div>

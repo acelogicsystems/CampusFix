@@ -1,26 +1,68 @@
+import { useState, useEffect } from 'react';
 import StatCard from "./StatCard";
+import { getMyStats } from '../services/issueService';
 
 function Stats() {
+    const [stats, setStats] = useState({
+        totalIssues: 0,
+        pendingIssues: 0,
+        inProgressIssues: 0,
+        resolvedIssue: 0
+    });
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await getMyStats();
+                
+                if (response.success) {
+                    setStats(response.stats);
+                } else {
+                   
+                    setError('Failed to load statistics.');
+                }
+            } catch (error) {
+                console.error('Error fetching statistics:', error);
+                setError('Unable to load your statistics.')
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    if (loading) {
+        return <p>Loading statistics...</p>;
+     }
+
+    if (error) {
+        return <p>{error}</p>;
+    }
+
+
     return (
         <section className="stats-grid">
             <StatCard 
-                 title='TOTAL ISSUES'
-                 value="128"
-                 desription="ALL reported issues" />
+                 title='Total Issues'
+                 value={stats.totalIssues}
+                 desription="Issues reported by you" />
             
             <StatCard 
-                title='PENDING'
-                value='24'
+                title='Pending'
+                value={stats.pendingIssues}
                 description="Awaiting attention" />
 
             <StatCard 
-                title="IN PROGRESS"
-                value="36"
-                description="Currently being worked on" />
+                title="In Progress"
+                value={stats.inProgressIssues}
+                description="Currently being handled" />
             
             <StatCard 
-                title="RESOLVED"
-                value="68"
+                title="Resolved"
+                value={stats.resolvedIssue}
                 description="Successfully completed" />
 
         </section>
